@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">CedCossCOVIDTracker</string>
+    <string name="state">STATE</string>
+    <string name="active_cases">active cases</string>
+    <string name="confirmed_cases">Confirmed Cases</string>
+    <string name="casualities">Casualities</string>
+</resources>
