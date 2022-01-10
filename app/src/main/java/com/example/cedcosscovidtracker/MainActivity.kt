@@ -17,9 +17,15 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
+    var state:String?=null
+    var actives:String?=null
+    var deceased:String?=null
+    var recovered:String?=null
+
+
      var allData= mutableListOf<MyCustomModel>()
     lateinit var adapter: CovidAdapter
-    var myStates= mutableListOf<String>()
+
 
     lateinit var recyler: RecyclerView
 
@@ -50,21 +56,16 @@ class MainActivity : AppCompatActivity() {
                 Log.i("secondError","We are here bro second line ")
                 for (key in jsonObj.keys())
                 {
-                    if(!key.equals("State Unassigned"))
-                    myStates.add(key)
+                    Log.i("thirdError","We are now in third step ")
+                    if(key!="State Unassigned")
+                    {
+                        state=key
+                        actives= jsonObj.getJSONObject(key).getString("active")
+                        recovered=jsonObj.getJSONObject(key).getString("recovered")
+                        deceased=jsonObj.getJSONObject(key).getString("deceased")
+                    }
+                    allData.add(MyCustomModel(state,deceased,actives,recovered))
 
-                }
-                Log.i("thirdError","We are now in third step ")
-
-                for (i in 0..jsonObj.length())
-                {
-                        val state=jsonObj.getString(myStates[i])
-                        val actives=jsonObj.getString("active").toString()
-                        val deceased=jsonObj.getString("deceased").toString()
-                        val recovered=jsonObj.getString("recovered").toString()
-                        val modelData=MyCustomModel(state,deceased,actives,recovered)
-                Log.i("fourthError","We are inside the loop and we are getting all the data")
-                        allData.add(modelData)
                 }
 
                 Log.i("fifth","We are in the fifth logcat and we are finding the fift error ")
