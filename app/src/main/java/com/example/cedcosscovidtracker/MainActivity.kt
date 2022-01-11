@@ -17,15 +17,16 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
-    var state:String?=null
-    var actives:String?=null
-    var deceased:String?=null
-    var recovered:String?=null
+    lateinit var state:String
+    lateinit var actives:String
+    lateinit var deceased:String
+    lateinit var recovered:String
+    lateinit var district:String
 
 
      var allData= mutableListOf<MyCustomModel>()
     lateinit var adapter: CovidAdapter
-
+    var myStates= mutableListOf<String>()
 
     lateinit var recyler: RecyclerView
 
@@ -41,44 +42,40 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getData() {
-
         val  data =newsInstance.getCovidData()
         data.enqueue(object:Callback<Any>{
-            @SuppressLint("NotifyDataSetChanged")
-            override fun onResponse(call: Call<Any>, response: Response<Any>)
+           override fun onResponse(call: Call<Any>, response: Response<Any>)
             {
-                Log.i("firstError"," we are here ")
-
                 val responseData=Gson().toJson(response.body())
-
                 val jsonObj=JSONObject(responseData)
-
-                Log.i("secondError","We are here bro second line ")
-                for (key in jsonObj.keys())
+                var  myData=jsonObj.getJSONObject("Uttar Pradesh")
+                myData=myData.getJSONObject("districtData")
+                for (key in myData.keys())
                 {
-                    Log.i("thirdError","We are now in third step ")
-                    if(key!="State Unassigned")
-                    {
-                        state=key
-                        actives= jsonObj.getJSONObject(key).getString("active")
-                        recovered=jsonObj.getJSONObject(key).getString("recovered")
-                        deceased=jsonObj.getJSONObject(key).getString("deceased")
-                    }
-                    allData.add(MyCustomModel(state,deceased,actives,recovered))
+                        state="Uttar_Pradesh"
+                        actives= myData.getJSONObject(key).getString("active")
+                        recovered=myData.getJSONObject(key).getString("recovered")
+                        deceased=myData.getJSONObject(key).getString("deceased")
+                        district=key.toString()
 
+                    allData.add(MyCustomModel(state,deceased,actives,recovered,district))
                 }
-
-                Log.i("fifth","We are in the fifth logcat and we are finding the fift error ")
                 adapter= CovidAdapter(this@MainActivity,allData)
                 recyler.adapter=adapter
-                recyler.layoutManager= LinearLayoutManager(this@MainActivity)
+                val stackLayoutManager=StackLayoutManager(StackLayoutManager.ScrollOrientation.BOTTOM_TO_TOP)
+                stackLayoutManager.setPagerMode(true)
+                stackLayoutManager.setPagerFlingVelocity(3000)
+                stackLayoutManager.setItemChangedListener(object :StackLayoutManager.ItemChangedListener{
+                    override fun onItemChanged(position: Int) {
+                        container.setBackgroundColor(Color.parseColor(MyColors.getColor()))
+                    }
+                })
+                recyler.layoutManager=stackLayoutManager
                 adapter.notifyDataSetChanged()
-                Log.i("sixth","we are in rhe sixth error ")
+
             }
 
             override fun onFailure(call: Call<Any>, t: Throwable) {
-
-
 
             }
 

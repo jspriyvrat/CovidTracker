@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import org.w3c.dom.Text
 
 
 class CovidAdapter(val context: Context,val data:MutableList<MyCustomModel>):RecyclerView.Adapter<CovidAdapter.Inner>() {
@@ -23,6 +24,7 @@ class CovidAdapter(val context: Context,val data:MutableList<MyCustomModel>):Rec
         holder.txtCasualties.text=d.deceased
         holder.txtrecovered.text=d.recovered
         holder.txtActive.text=d.active
+        holder.txtdist.text=d.district
     }
 
     override fun getItemCount(): Int {
@@ -37,6 +39,7 @@ class CovidAdapter(val context: Context,val data:MutableList<MyCustomModel>):Rec
         var txtCasualties:TextView=view.findViewById(R.id.casualty)
         var txtrecovered:TextView=view.findViewById(R.id.recovered)
         var txtActive:TextView=view.findViewById(R.id.active)
+        var txtdist:TextView=view.findViewById(R.id.dist)
     }
 
 }
